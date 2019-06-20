@@ -11,18 +11,24 @@ uses
 
 type
 
-  TSocialMonkeyFacebookProvider = class(TAbstractProvider, IFacebookProviderInterface)
+  TSocialMonkeyFacebookProvider = class(TAbstractProvider,
+    IFacebookProviderInterface)
   private
     { private declarations }
     FGraphUrl: string;
     FFields: TArray<string>;
     FVersion: string;
+    FPictureSize: Integer;
+
     procedure SetFields(const Value: TArray<string>);
     procedure SetGraphUrl(const Value: string);
     procedure SetVersion(const Value: string);
     function GetFields: TArray<string>;
     function GetGraphUrl: string;
     function GetVersion: string;
+    function GetPictureSize: Integer;
+    procedure SetPictureSize(const Value: Integer);
+
   protected
     { protected declarations }
     function GetAuthUrl(AState: string): string; override;
@@ -33,9 +39,11 @@ type
     property Fields: TArray<string> read GetFields write SetFields;
     property GraphUrl: string read GetGraphUrl write SetGraphUrl;
     property Version: string read GetVersion write SetVersion;
+    property PictureSize: Integer read GetPictureSize write SetPictureSize;
   public
     { public declarations }
-    constructor Create(AClientID, AClientSecret, ARedirectUrl: string); override;
+    constructor Create(AClientID, AClientSecret, ARedirectUrl: string);
+      override;
   published
     { published declarations }
   end;
@@ -44,18 +52,21 @@ implementation
 
 { TSocialMonkeyFacebookProvider }
 
-constructor TSocialMonkeyFacebookProvider.Create(AClientID, AClientSecret, ARedirectUrl: string);
+constructor TSocialMonkeyFacebookProvider.Create(AClientID, AClientSecret,
+  ARedirectUrl: string);
 begin
   inherited;
   Scopes := ['email'];
   Fields := ['name', 'email', 'gender', 'verified', 'link'];
   GraphUrl := 'https://graph.facebook.com';
   Version := 'v3.3';
+  PictureSize := 100;
 end;
 
 function TSocialMonkeyFacebookProvider.GetAuthUrl(AState: string): string;
 begin
-  Result := BuildAuthUrlFromBase('https://www.facebook.com/' + Version + '/dialog/oauth', AState);
+  Result := BuildAuthUrlFromBase('https://www.facebook.com/' + Version +
+    '/dialog/oauth', AState);
 end;
 
 function TSocialMonkeyFacebookProvider.GetFields: TArray<string>;
@@ -66,6 +77,11 @@ end;
 function TSocialMonkeyFacebookProvider.GetGraphUrl: string;
 begin
   Result := FGraphUrl;
+end;
+
+function TSocialMonkeyFacebookProvider.GetPictureSize: Integer;
+begin
+  Result := FPictureSize;
 end;
 
 function TSocialMonkeyFacebookProvider.GetTokenUrl: string;
@@ -89,7 +105,8 @@ begin
   end;
 
   LHeader := [TNameValuePair.Create('Accept', 'application/json')];
-  Result := HttpRequest.Get(LURI.ToString, nil, LHeader).ContentAsString(TEncoding.UTF8);
+  Result := HttpRequest.Get(LURI.ToString, nil, LHeader)
+    .ContentAsString(TEncoding.UTF8);
 
 end;
 
@@ -98,7 +115,8 @@ begin
   Result := FVersion;
 end;
 
-function TSocialMonkeyFacebookProvider.mapUserToObject(AUser: string): ISocialUser;
+function TSocialMonkeyFacebookProvider.MapUserToObject(AUser: string)
+  : ISocialUser;
 var
   LJsonObject: TJsonObject;
   LSocialUser: TSocialUser;
@@ -120,7 +138,8 @@ begin
       if LJsonObject.TryGetValue<string>('email', LEmail) then
         LSocialUser.Email := LEmail;
       LAvatarUrl := GraphUrl + '/' + Version + '/' + LId + '/picture';
-      LSocialUser.Avatar := LAvatarUrl + '?type=normal';
+      LSocialUser.Avatar := LAvatarUrl + '?type=normal&height=' +
+        FPictureSize.ToString + '&width=' + FPictureSize.ToString;
       Result := LSocialUser;
     finally
       LJsonObject.Free;
@@ -136,6 +155,11 @@ end;
 procedure TSocialMonkeyFacebookProvider.SetGraphUrl(const Value: string);
 begin
   FGraphUrl := Value;
+end;
+
+procedure TSocialMonkeyFacebookProvider.SetPictureSize(const Value: Integer);
+begin
+  FPictureSize := Value;
 end;
 
 procedure TSocialMonkeyFacebookProvider.SetVersion(const Value: string);

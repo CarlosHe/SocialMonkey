@@ -50,8 +50,8 @@ begin
   if not FClosing then
   begin
     FClosing := True;
-    DoWebViewClose(AAction, ACode);
     Close;
+    DoWebViewClose(AAction, ACode);
   end;
 end;
 
@@ -75,7 +75,17 @@ begin
 end;
 
 procedure TSocialMonkeyWebBrowserView.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+  LJs: string;
 begin
+  {TODO -oIgorBastos -cTemporario : criar regra de logout para o provider}
+  LJs := 'javascript:(function(){var d = new Date();var name="c_user";var ' +
+    'domain=".facebook.com";var path="/";var expires = ";expires="+d;document.'
+    + 'cookie = name + "=" +( ( path ) ? ";path=" + path : "") +( ( domain ) ? '
+    + '";domain=" + domain : "" ) +";expires="+expires;location.reload();})();';
+
+  WebBrowse.EvaluateJavaScript(LJs);
+
   Action := TCloseAction.caFree;
 end;
 

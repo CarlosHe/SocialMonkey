@@ -5,7 +5,8 @@ interface
 uses
   SocialMonkey.Contracts.Provider, System.Net.URLClient, System.Net.HttpClient,
   System.Net.HttpClientComponent, System.Generics.Collections,
-  SocialMonkey.Contracts.SocialUser, SocialMonkey.Types, System.SysUtils, FMX.Dialogs, SocialMonkey.Contracts.SocialWebBrowser,
+  SocialMonkey.Contracts.SocialUser, SocialMonkey.Types, System.SysUtils,
+  FMX.Dialogs, SocialMonkey.Contracts.SocialWebBrowser,
   SocialMonkey.SocialWebBrowser, SocialMonkey.Two.SocialUser, System.JSON;
 
 type
@@ -58,7 +59,8 @@ type
     function IsStateless: Boolean;
     function GetState: string;
     function GetCodeFields(AState: string): TQueryFieldArray;
-    function FormatScopes(AScopes: TArray<string>; AScopeSeparator: string): string;
+    function FormatScopes(AScopes: TArray<string>;
+      AScopeSeparator: string): string;
     procedure DoSocialUserCallback(const ASocialUser: ISocialUser = nil);
     procedure GetCode(AOnCode: TOnCode);
     function GetUserJsonValue<T>(AUserJsonResponse, AKey: string): T;
@@ -71,9 +73,11 @@ type
     property RedirectUrl: string read GetRedirectUrl write SetRedirectUrl;
     property Parameters: TArray<string> read GetParameters write SetParameters;
     property Scopes: TArray<string> read GetScopes write SetScopes;
-    property ScopeSeparator: string read GetScopeSeparator write SetScopeSeparator;
+    property ScopeSeparator: string read GetScopeSeparator
+      write SetScopeSeparator;
     property HttpClient: TNetHTTPClient read GetHttpClient write SetHttpClient;
-    property HttpRequest: TNetHTTPRequest read GetHttpRequest write SetHttpRequest;
+    property HttpRequest: TNetHTTPRequest read GetHttpRequest
+      write SetHttpRequest;
 
   public
     { public declarations }
@@ -81,7 +85,8 @@ type
     destructor Destroy; override;
     function GetAccessTokenResponse(ACode: string): string;
     function UserFromToken(AToken: string): ISocialUser;
-    function SocialUser(ASocialUserCallback: TSocialUserCallback<ISocialUser>): IProvider;
+    function SocialUser(ASocialUserCallback: TSocialUserCallback<ISocialUser>)
+      : IProvider;
     property Stateless: Boolean read GetStateless write SetStateless;
   published
     { published declarations }
@@ -104,7 +109,8 @@ begin
   Result := LURI.ToString;
 end;
 
-constructor TAbstractProvider.Create(AClientID, AClientSecret, ARedirectUrl: string);
+constructor TAbstractProvider.Create(AClientID, AClientSecret,
+  ARedirectUrl: string);
 begin
   FHttpClient := TNetHTTPClient.Create(nil);
   FHttpClient.Asynchronous := True;
@@ -128,12 +134,14 @@ begin
   inherited;
 end;
 
-procedure TAbstractProvider.DoSocialUserCallback(const ASocialUser: ISocialUser);
+procedure TAbstractProvider.DoSocialUserCallback(const ASocialUser
+  : ISocialUser);
 begin
 
 end;
 
-function TAbstractProvider.FormatScopes(AScopes: TArray<string>; AScopeSeparator: string): string;
+function TAbstractProvider.FormatScopes(AScopes: TArray<string>;
+  AScopeSeparator: string): string;
 begin
   Result := String.Join(AScopeSeparator, AScopes);
 end;
@@ -146,7 +154,8 @@ begin
   LURI := TURI.Create(GetTokenUrl);
   LURI.Params := GetTokenFields(ACode);
   LHeader := [TNameValuePair.Create('Accept', 'application/json')];
-  Result := HttpRequest.Get(LURI.ToString, nil, LHeader).ContentAsString(TEncoding.UTF8);
+  Result := HttpRequest.Get(LURI.ToString, nil, LHeader)
+    .ContentAsString(TEncoding.UTF8);
 end;
 
 function TAbstractProvider.GetClientId: string;
@@ -176,7 +185,7 @@ begin
     procedure
     begin
       AOnCode(TActionSocial.Denied, '');
-    end).Execute(GetAuthUrl(LState));
+    end).Execute(GetAuthUrl(LState))
 end;
 
 function TAbstractProvider.GetCodeFields(AState: string): TQueryFieldArray;
@@ -184,19 +193,23 @@ var
   LCodeFieldsArray: TQueryFieldArray;
 begin
 
-  LCodeFieldsArray := [TQueryField.Create('client_id', ClientId), TQueryField.Create('redirect_uri', RedirectUrl), TQueryField.Create('scope', FormatScopes(Scopes, ScopeSeparator)
-    ), TQueryField.Create('response_type', 'code')];
+  LCodeFieldsArray := [TQueryField.Create('client_id', ClientId),
+    TQueryField.Create('redirect_uri', RedirectUrl), TQueryField.Create('scope',
+    FormatScopes(Scopes, ScopeSeparator)),
+    TQueryField.Create('response_type', 'code')];
 
   if (UsesState) then
   begin
-    LCodeFieldsArray := LCodeFieldsArray + [TQueryField.Create('state', AState)];
+    LCodeFieldsArray := LCodeFieldsArray +
+      [TQueryField.Create('state', AState)];
   end;
 
   Result := LCodeFieldsArray;
 
 end;
 
-function TAbstractProvider.GetExpiresInValue(AUserJsonResponse: string): Integer;
+function TAbstractProvider.GetExpiresInValue(AUserJsonResponse: string)
+  : Integer;
 begin
   Result := GetUserJsonValue<Integer>(AUserJsonResponse, 'expires_in');
 end;
@@ -221,7 +234,8 @@ begin
   Result := FRedirectUrl;
 end;
 
-function TAbstractProvider.GetRefreshTokenValue(AUserJsonResponse: string): string;
+function TAbstractProvider.GetRefreshTokenValue(AUserJsonResponse
+  : string): string;
 begin
   Result := GetUserJsonValue<string>(AUserJsonResponse, 'refresh_token');
 end;
@@ -248,8 +262,10 @@ end;
 
 function TAbstractProvider.GetTokenFields(ACode: string): TNameValueArray;
 begin
-  Result := [TNameValuePair.Create('client_id', ClientId), TNameValuePair.Create('client_secret', ClientSecret), TNameValuePair.Create('code', ACode),
-    TNameValuePair.Create('redirect_uri', RedirectUrl)]
+  Result := [TNameValuePair.Create('client_id', ClientId),
+    TNameValuePair.Create('client_secret', ClientSecret),
+    TNameValuePair.Create('code', ACode), TNameValuePair.Create('redirect_uri',
+    RedirectUrl)]
 end;
 
 function TAbstractProvider.GetTokenValue(AUserJsonResponse: string): string;
@@ -257,7 +273,8 @@ begin
   Result := GetUserJsonValue<string>(AUserJsonResponse, 'access_token');
 end;
 
-function TAbstractProvider.GetUserJsonValue<T>(AUserJsonResponse, AKey: string): T;
+function TAbstractProvider.GetUserJsonValue<T>(AUserJsonResponse,
+  AKey: string): T;
 var
   LJsonObject: TJsonObject;
   LValue: T;
@@ -333,7 +350,8 @@ begin
   FStateless := Value;
 end;
 
-function TAbstractProvider.SocialUser(ASocialUserCallback: TSocialUserCallback<ISocialUser>): IProvider;
+function TAbstractProvider.SocialUser(ASocialUserCallback
+  : TSocialUserCallback<ISocialUser>): IProvider;
 begin
   FSocialUserCallback := ASocialUserCallback;
   GetCode(
@@ -348,9 +366,11 @@ begin
         TActionSocial.Allowed:
           begin
             LResponse := GetAccessTokenResponse(ACode);
-            LSocialUser := MapUserToObject(GetUserByToken(GetTokenValue(LResponse)));
+            LSocialUser := MapUserToObject
+              (GetUserByToken(GetTokenValue(LResponse)));
             TSocialUser(LSocialUser).SetToken(GetTokenValue(LResponse));
-            TSocialUser(LSocialUser).SetRefreshToken(GetRefreshTokenValue(LResponse));
+            TSocialUser(LSocialUser).SetRefreshToken
+              (GetRefreshTokenValue(LResponse));
             TSocialUser(LSocialUser).SetExpiresIn(GetExpiresInValue(LResponse));
             FSocialUserCallback(TActionSocial.Allowed, LSocialUser);
           end;

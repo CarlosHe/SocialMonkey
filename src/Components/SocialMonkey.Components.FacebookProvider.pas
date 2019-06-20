@@ -25,6 +25,8 @@ type
     function GetScopes: string;
     function GetStateless: Boolean;
     function GetVersion: string;
+    function GetPictureSize: Integer;
+    procedure SetPictureSize(const Value: Integer);
   protected
     { protected declarations }
     function GetInstanceAsIFacebookProviderInterface: IFacebookProviderInterface;
@@ -41,6 +43,7 @@ type
     property Version: string read GetVersion write SetVersion;
     property Scopes: string read GetScopes write SetScopes;
     property Fields: string read GetFields write SetFields;
+    property PictureSize: Integer read GetPictureSize write SetPictureSize;
   end;
 
 implementation
@@ -79,6 +82,11 @@ begin
   Supports(Provider, IFacebookProviderInterface, Result);
 end;
 
+function TSocialMonkeyFacebookProvider.GetPictureSize: Integer;
+begin
+  Result := GetInstanceAsIFacebookProviderInterface.GetPictureSize;
+end;
+
 function TSocialMonkeyFacebookProvider.GetRedirectUrl: string;
 begin
   Result := GetInstanceAsIFacebookProviderInterface.GetRedirectUrl;
@@ -112,6 +120,11 @@ end;
 procedure TSocialMonkeyFacebookProvider.SetFields(const Value: string);
 begin
   GetInstanceAsIFacebookProviderInterface.SetFields(Value.Split([',']));
+end;
+
+procedure TSocialMonkeyFacebookProvider.SetPictureSize(const Value: Integer);
+begin
+  GetInstanceAsIFacebookProviderInterface.SetPictureSize(Value);
 end;
 
 procedure TSocialMonkeyFacebookProvider.SetRedirectUrl(const Value: string);

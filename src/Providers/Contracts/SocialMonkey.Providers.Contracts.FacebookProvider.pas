@@ -13,6 +13,8 @@ type
     procedure SetVersion(const Value: string);
     function GetFields: TArray<string>;
     function GetVersion: string;
+    function GetPictureSize: Integer;
+    procedure SetPictureSize(const Value: Integer);
   end;
 
 implementation

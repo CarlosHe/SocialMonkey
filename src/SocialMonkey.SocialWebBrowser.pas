@@ -133,11 +133,7 @@ begin
   FSocialMonkeyWebBrowserView.LayoutWebBrowser.Parent := Screen.ActiveForm;
 {$ENDIF}
 {$IF Defined(MSWINDOWS) or Defined(MACOS)}
-  FSocialMonkeyWebBrowserView.ShowModal(
-    procedure(AModalResult: TModalResult)
-    begin
-
-    end);
+  FSocialMonkeyWebBrowserView.Show();
 {$ENDIF}
 end;
 
