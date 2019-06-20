@@ -6,7 +6,7 @@
         <FrameworkType>FMX</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
-        <Platform Condition="'$(Platform)'==''">Android</Platform>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1119</TargetedPlatforms>
         <AppType>Package</AppType>
     </PropertyGroup>
@@ -180,11 +180,6 @@
         <DCCReference Include="src\Contracts\SocialMonkey.Contracts.SocialWebBrowser.pas"/>
         <DCCReference Include="src\Providers\SocialMonkey.Providers.FacebookProvider.pas"/>
         <DCCReference Include="src\Providers\Contracts\SocialMonkey.Providers.Contracts.FacebookProvider.pas"/>
-        <DCCReference Include="src\Resources\Views\SocialMonkey.WebView.pas">
-            <Form>SocialMonkeyWebView</Form>
-            <FormType>fmx</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="src\Two\SocialMonkey.Two.AbstractProvider.pas"/>
         <DCCReference Include="src\Two\SocialMonkey.Two.ProviderInterface.pas"/>
         <DCCReference Include="src\Two\SocialMonkey.Two.SocialUser.pas"/>
@@ -194,6 +189,10 @@
         <DCCReference Include="src\SocialMonkey.Types.pas"/>
         <DCCReference Include="src\Components\SocialMonkey.Components.BaseProvider.pas"/>
         <DCCReference Include="src\Components\SocialMonkey.Components.Manager.pas"/>
+        <DCCReference Include="src\Resources\Views\SocialMonkey.WebBrowserView.pas">
+            <Form>SocialMonkeyWebBrowserView</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -222,13 +221,19 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="$(BDS)\Redist\osx64\libcgsqlite3.dylib" Class="DependencyModule">
-                    <Platform Name="OSX64">
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
-                    <Platform Name="OSX32">
+                <DeployFile LocalName="..\..\..\..\Public\Documents\Embarcadero\Studio\20.0\Bpl\SocialMonkeyPackage.bpl" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>SocialMonkeyPackage.bpl</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\osx64\libcgsqlite3.dylib" Class="DependencyModule">
+                    <Platform Name="OSX64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -247,7 +252,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\..\..\..\Public\Documents\Embarcadero\Studio\20.0\Bpl\SocialMonkeyPackage.bpl" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\20.0\Bpl\SocialMonkeyPackage.bpl" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>SocialMonkeyPackage.bpl</RemoteName>
                         <Overwrite>true</Overwrite>

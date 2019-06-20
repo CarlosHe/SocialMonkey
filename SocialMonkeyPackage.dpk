@@ -40,7 +40,6 @@ contains
   SocialMonkey.Contracts.SocialWebBrowser in 'src\Contracts\SocialMonkey.Contracts.SocialWebBrowser.pas',
   SocialMonkey.Providers.FacebookProvider in 'src\Providers\SocialMonkey.Providers.FacebookProvider.pas',
   SocialMonkey.Providers.Contracts.FacebookProvider in 'src\Providers\Contracts\SocialMonkey.Providers.Contracts.FacebookProvider.pas',
-  SocialMonkey.WebView in 'src\Resources\Views\SocialMonkey.WebView.pas' {SocialMonkeyWebView: TFrame},
   SocialMonkey.Two.AbstractProvider in 'src\Two\SocialMonkey.Two.AbstractProvider.pas',
   SocialMonkey.Two.ProviderInterface in 'src\Two\SocialMonkey.Two.ProviderInterface.pas',
   SocialMonkey.Two.SocialUser in 'src\Two\SocialMonkey.Two.SocialUser.pas',
@@ -49,6 +48,7 @@ contains
   SocialMonkey.SocialWebBrowser in 'src\SocialMonkey.SocialWebBrowser.pas',
   SocialMonkey.Types in 'src\SocialMonkey.Types.pas',
   SocialMonkey.Components.BaseProvider in 'src\Components\SocialMonkey.Components.BaseProvider.pas',
-  SocialMonkey.Components.Manager in 'src\Components\SocialMonkey.Components.Manager.pas';
+  SocialMonkey.Components.Manager in 'src\Components\SocialMonkey.Components.Manager.pas',
+  SocialMonkey.WebBrowserView in 'src\Resources\Views\SocialMonkey.WebBrowserView.pas' {SocialMonkeyWebBrowserView};
 
 end.

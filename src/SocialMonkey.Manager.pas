@@ -5,7 +5,7 @@ interface
 uses
   SocialMonkey.Contracts.Factory, SocialMonkey.Contracts.Provider,
   System.SysUtils, System.Generics.Collections,
-  SocialMonkey.Two.AbstractProvider, SocialMonkey.Two.ProviderInterface;
+  SocialMonkey.Two.AbstractProvider;
 
 type
 

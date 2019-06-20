@@ -3,13 +3,14 @@ unit SocialMonkey.SocialWebBrowser;
 interface
 
 uses
-  System.SysUtils, FMX.Forms, SocialMonkey.Contracts.SocialWebBrowser, SocialMonkey.Types, SocialMonkey.WebView;
+  System.SysUtils, FMX.Forms, SocialMonkey.Contracts.SocialWebBrowser, SocialMonkey.Types, SocialMonkey.WebView,
+  SocialMonkey.WebBrowserView, System.UITypes;
 
 type
   TSocialWebBrowser = class(TInterfacedObject, ISocialWebBrowser)
   private
     { private declarations }
-    FSocialMonkeyWebView: TSocialMonkeyWebView;
+    FSocialMonkeyWebBrowserView: TSocialMonkeyWebBrowserView;
     FAuthUrl: string;
     FOnBegin: TOnBeginAction;
     FOnFinish: TOnFinishAction;
@@ -124,11 +125,20 @@ end;
 
 procedure TSocialWebBrowser.OpenWebView;
 begin
-  FSocialMonkeyWebView := TSocialMonkeyWebView.Create(nil);
-  FSocialMonkeyWebView.AuthUrl := FAuthUrl;
-  FSocialMonkeyWebView.OnClose := WebViewClose;
+  FSocialMonkeyWebBrowserView := TSocialMonkeyWebBrowserView.Create(nil);
+  FSocialMonkeyWebBrowserView.AuthUrl := FAuthUrl;
+  FSocialMonkeyWebBrowserView.OnWebViewClose := WebViewClose;
   DoBegin;
-  FSocialMonkeyWebView.Show;
+{$IF Defined(ANDROID) or Defined(IOS64) or Defined(IOS32)}
+  FSocialMonkeyWebBrowserView.LayoutWebBrowser.Parent := Screen.ActiveForm;
+{$ENDIF}
+{$IF Defined(MSWINDOWS) or Defined(MACOS)}
+  FSocialMonkeyWebBrowserView.ShowModal(
+    procedure(AModalResult: TModalResult)
+    begin
+
+    end);
+{$ENDIF}
 end;
 
 procedure TSocialWebBrowser.WebViewClose(AAction: TActionSocial; ACode: string);
