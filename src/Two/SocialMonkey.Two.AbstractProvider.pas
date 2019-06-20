@@ -164,7 +164,7 @@ var
   LState: string;
 begin
   LState := GetState;
-  FSocialWebBrowser.Execute(GetAuthUrl(LState)).OnAccessAllowed(
+  FSocialWebBrowser.OnAccessAllowed(
     procedure(ACode: string)
     begin
       AOnCode(TActionSocial.Allowed, ACode);
@@ -176,7 +176,7 @@ begin
     procedure
     begin
       AOnCode(TActionSocial.Denied, '');
-    end)
+    end).Execute(GetAuthUrl(LState));
 end;
 
 function TAbstractProvider.GetCodeFields(AState: string): TQueryFieldArray;
