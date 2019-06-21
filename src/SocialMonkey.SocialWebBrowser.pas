@@ -3,8 +3,15 @@ unit SocialMonkey.SocialWebBrowser;
 interface
 
 uses
-  System.SysUtils, FMX.Forms, SocialMonkey.Contracts.SocialWebBrowser, SocialMonkey.Types, SocialMonkey.WebView,
-  SocialMonkey.WebBrowserView, System.UITypes;
+  System.SysUtils,
+  System.UITypes,
+
+  FMX.Forms,
+
+  SocialMonkey.Contracts.SocialWebBrowser,
+  SocialMonkey.Types,
+  //SocialMonkey.WebView,
+  SocialMonkey.WebBrowserView;
 
 type
   TSocialWebBrowser = class(TInterfacedObject, ISocialWebBrowser)
