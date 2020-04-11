@@ -42,8 +42,8 @@ object SocialMonkeyWebBrowserView: TSocialMonkeyWebBrowserView
       object ShadowEffectWebBrowser1: TShadowEffect
         Distance = 4.000000000000000000
         Direction = 45.000000000000000000
-        Softness = 0.400000005960464400
-        Opacity = 0.400000005960464400
+        Softness = 0.400000005960464500
+        Opacity = 0.400000005960464500
         ShadowColor = claBlack
       end
       object PathWebBrowserClose: TPath

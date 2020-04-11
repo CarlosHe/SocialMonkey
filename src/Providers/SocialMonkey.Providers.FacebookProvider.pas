@@ -20,6 +20,7 @@ type
     FVersion: string;
     FPictureSize: Integer;
 
+    procedure SetRedirectUrl(const Value: string); override;
     procedure SetFields(const Value: TArray<string>);
     procedure SetGraphUrl(const Value: string);
     procedure SetVersion(const Value: string);
@@ -59,7 +60,7 @@ begin
   Scopes := ['email'];
   Fields := ['name', 'email', 'gender', 'verified', 'link'];
   GraphUrl := 'https://graph.facebook.com';
-  Version := 'v3.3';
+  Version := 'v6.0';
   PictureSize := 100;
 end;
 
@@ -160,6 +161,17 @@ end;
 procedure TSocialMonkeyFacebookProvider.SetPictureSize(const Value: Integer);
 begin
   FPictureSize := Value;
+end;
+
+procedure TSocialMonkeyFacebookProvider.SetRedirectUrl(const Value: string);
+var
+LRedirectUrl: string;
+begin
+  LRedirectUrl := Value.Trim;
+   if not (LRedirectUrl.EndsWith('/')) then
+   LRedirectUrl := LRedirectUrl + '/';
+
+  inherited SetRedirectUrl(LRedirectUrl);
 end;
 
 procedure TSocialMonkeyFacebookProvider.SetVersion(const Value: string);

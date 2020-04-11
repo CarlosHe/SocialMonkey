@@ -28,7 +28,7 @@ type
     procedure SetClientId(const Value: string);
     procedure SetClientSecret(const Value: string);
     procedure SetParameters(const Value: TArray<string>);
-    procedure SetRedirectUrl(const Value: string);
+
     procedure SetScopes(const Value: TArray<string>);
     procedure SetScopeSeparator(const Value: string);
     procedure SetHttpClient(const Value: TNetHTTPClient);
@@ -45,7 +45,7 @@ type
     function GetStateless: Boolean;
   protected
     { protected declarations }
-
+    procedure SetRedirectUrl(const Value: string); virtual;
     function RandomCodeStr(const CodeLen: Word): string;
 
     function GetAuthUrl(AState: string): string; virtual; abstract;
@@ -193,10 +193,13 @@ var
   LCodeFieldsArray: TQueryFieldArray;
 begin
 
-  LCodeFieldsArray := [TQueryField.Create('client_id', ClientId),
-    TQueryField.Create('redirect_uri', RedirectUrl), TQueryField.Create('scope',
-    FormatScopes(Scopes, ScopeSeparator)),
-    TQueryField.Create('response_type', 'code')];
+  LCodeFieldsArray := [ //
+    TQueryField.Create('client_id', ClientId), //
+    TQueryField.Create('redirect_uri', RedirectUrl), //
+    TQueryField.Create('scope', FormatScopes(Scopes, ScopeSeparator)), //
+    TQueryField.Create('response_type', 'code'), //
+    TQueryField.Create('auth_type', 'rerequest') //
+    ];
 
   if (UsesState) then
   begin
