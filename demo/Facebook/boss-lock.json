@@ -1,0 +1,41 @@
+{
+	"hash": "d41d8cd98f00b204e9800998ecf8427e",
+	"updated": "2020-11-23T07:42:51.3057508-03:00",
+	"installedModules": {
+		"https://github.com/carloshe/socialmonkey": {
+			"name": "socialmonkey",
+			"version": "0.0.2",
+			"hash": "22b6f56dcec3bbb08c9935f4ff03b7ab",
+			"artifacts": {
+				"dcp": [
+					"SocialMonkeyPackage.dcp"
+				],
+				"dcu": [
+					"SocialMonkey.AbstractSocialUser.dcu",
+					"SocialMonkey.Components.BaseProvider.dcu",
+					"SocialMonkey.Components.FacebookProvider.dcu",
+					"SocialMonkey.Components.Manager.dcu",
+					"SocialMonkey.Components.Reg.dcu",
+					"SocialMonkey.Contracts.Factory.dcu",
+					"SocialMonkey.Contracts.Provider.dcu",
+					"SocialMonkey.Contracts.SocialUser.dcu",
+					"SocialMonkey.Contracts.SocialWebBrowser.dcu",
+					"SocialMonkey.Manager.dcu",
+					"SocialMonkey.Providers.Contracts.FacebookProvider.dcu",
+					"SocialMonkey.Providers.FacebookProvider.dcu",
+					"SocialMonkey.SocialWebBrowser.dcu",
+					"SocialMonkey.Two.AbstractProvider.dcu",
+					"SocialMonkey.Two.ProviderInterface.dcu",
+					"SocialMonkey.Two.SocialUser.dcu",
+					"SocialMonkey.Types.dcu",
+					"SocialMonkey.WebBrowserView.dcu"
+				],
+				"bpl": [
+					"SocialMonkeyPackage.bpl"
+				]
+			},
+			"failed": false,
+			"changed": false
+		}
+	}
+}

@@ -1,0 +1,54 @@
+package SocialMonkeyPackage;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS OFF}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION ON}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO OFF}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES OFF}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE RELEASE}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  fmx;
+
+contains
+  SocialMonkey.Components.FacebookProvider in 'src\Components\SocialMonkey.Components.FacebookProvider.pas',
+  SocialMonkey.Components.Reg in 'src\Components\SocialMonkey.Components.Reg.pas',
+  SocialMonkey.Contracts.Factory in 'src\Contracts\SocialMonkey.Contracts.Factory.pas',
+  SocialMonkey.Contracts.Provider in 'src\Contracts\SocialMonkey.Contracts.Provider.pas',
+  SocialMonkey.Contracts.SocialUser in 'src\Contracts\SocialMonkey.Contracts.SocialUser.pas',
+  SocialMonkey.Contracts.SocialWebBrowser in 'src\Contracts\SocialMonkey.Contracts.SocialWebBrowser.pas',
+  SocialMonkey.Providers.FacebookProvider in 'src\Providers\SocialMonkey.Providers.FacebookProvider.pas',
+  SocialMonkey.Providers.Contracts.FacebookProvider in 'src\Providers\Contracts\SocialMonkey.Providers.Contracts.FacebookProvider.pas',
+  SocialMonkey.Two.AbstractProvider in 'src\Two\SocialMonkey.Two.AbstractProvider.pas',
+  SocialMonkey.Two.ProviderInterface in 'src\Two\SocialMonkey.Two.ProviderInterface.pas',
+  SocialMonkey.Two.SocialUser in 'src\Two\SocialMonkey.Two.SocialUser.pas',
+  SocialMonkey.AbstractSocialUser in 'src\SocialMonkey.AbstractSocialUser.pas',
+  SocialMonkey.Manager in 'src\SocialMonkey.Manager.pas',
+  SocialMonkey.SocialWebBrowser in 'src\SocialMonkey.SocialWebBrowser.pas',
+  SocialMonkey.Types in 'src\SocialMonkey.Types.pas',
+  SocialMonkey.Components.BaseProvider in 'src\Components\SocialMonkey.Components.BaseProvider.pas',
+  SocialMonkey.Components.Manager in 'src\Components\SocialMonkey.Components.Manager.pas',
+  SocialMonkey.WebBrowserView in 'src\Resources\Views\SocialMonkey.WebBrowserView.pas' {SocialMonkeyWebBrowserView};
+
+end.
