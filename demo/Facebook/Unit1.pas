@@ -156,8 +156,8 @@ begin
 
   }
 
-  SocialMonkeyFacebookProvider.ClientId := '683549649083523';
-  SocialMonkeyFacebookProvider.ClientSecret := '789d9bc76b26b7321cba4f3ddee7aba1';
+  SocialMonkeyFacebookProvider.ClientId := 'ClientId';
+  SocialMonkeyFacebookProvider.ClientSecret := 'ClientSecret';
   SocialMonkeyManager.AddDriver('facebook', SocialMonkeyFacebookProvider.Provider);
 end;
 
@@ -220,7 +220,7 @@ begin
         TThread.Queue(nil,
           procedure
           begin
-            ShowMessage('Operação foi cancelada!');
+            ShowMessage('OperaÃ§Ã£o foi cancelada!');
           end);
 
       end;
@@ -247,7 +247,7 @@ begin
         TThread.Queue(nil,
           procedure
           begin
-            ShowMessage('Operação foi rejeitada!');
+            ShowMessage('OperaÃ§Ã£o foi rejeitada!');
           end);
 
       end;
