@@ -93,8 +93,9 @@ procedure TSocialMonkeyWebBrowserView.FormCreate(Sender: TObject);
 begin
   FClosing := False;
 {$IF Defined(MSWINDOWS) or Defined(MACOS)}
-  WindowState:= TWindowState.wsMaximized
+  WindowState:= TWindowState.wsMaximized;
 {$ENDIF}
+  WebBrowse.EnableCaching := False;
 end;
 
 procedure TSocialMonkeyWebBrowserView.PathWebBrowserCloseClick(Sender: TObject);
