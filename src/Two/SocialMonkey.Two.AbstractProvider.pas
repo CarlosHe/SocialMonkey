@@ -193,12 +193,12 @@ var
   LCodeFieldsArray: TQueryFieldArray;
 begin
 
-  LCodeFieldsArray := [ //
-    TQueryField.Create('client_id', ClientId), //
-    TQueryField.Create('redirect_uri', RedirectUrl), //
-    TQueryField.Create('scope', FormatScopes(Scopes, ScopeSeparator)), //
-    TQueryField.Create('response_type', 'code'), //
-    TQueryField.Create('auth_type', 'rerequest') //
+  LCodeFieldsArray := [
+    TQueryField.Create('client_id', ClientId),
+    TQueryField.Create('redirect_uri', RedirectUrl),
+    TQueryField.Create('scope', FormatScopes(Scopes, ScopeSeparator)),
+    TQueryField.Create('response_type', 'code'){,
+    TQueryField.Create('auth_type', 'rerequest')}
     ];
 
   if (UsesState) then

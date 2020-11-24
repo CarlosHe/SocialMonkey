@@ -53,7 +53,7 @@ implementation
 constructor TSocialMonkeyFacebookProvider.Create(AOwner: TComponent);
 begin
   inherited;
-  SetProvider( SocialMonkey.Providers.FacebookProvider.TSocialMonkeyFacebookProvider.Create('', '', ''));
+  SetProvider(SocialMonkey.Providers.FacebookProvider.TSocialMonkeyFacebookProvider.Create('', '', ''));
 end;
 
 destructor TSocialMonkeyFacebookProvider.Destroy;

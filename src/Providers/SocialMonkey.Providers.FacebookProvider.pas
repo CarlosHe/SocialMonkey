@@ -60,14 +60,15 @@ begin
   Scopes := ['email'];
   Fields := ['name', 'email', 'gender', 'verified', 'link'];
   GraphUrl := 'https://graph.facebook.com';
-  Version := 'v6.0';
+  Version := 'v9.0';
+  RedirectUrl := 'https://google.com/';
   PictureSize := 100;
+  Stateless := False;
 end;
 
 function TSocialMonkeyFacebookProvider.GetAuthUrl(AState: string): string;
 begin
-  Result := BuildAuthUrlFromBase('https://www.facebook.com/' + Version +
-    '/dialog/oauth', AState);
+  Result := BuildAuthUrlFromBase('https://www.facebook.com/' + Version + '/dialog/oauth', AState);
 end;
 
 function TSocialMonkeyFacebookProvider.GetFields: TArray<string>;
@@ -87,7 +88,8 @@ end;
 
 function TSocialMonkeyFacebookProvider.GetTokenUrl: string;
 begin
-  Result := GraphUrl + '/' + Version + '/oauth/access_token';
+  // Result := GraphUrl + '/' + Version + '/oauth/access_token';
+  Result := GraphUrl + '/oauth/access_token';
 end;
 
 function TSocialMonkeyFacebookProvider.GetUserByToken(AToken: string): string;
