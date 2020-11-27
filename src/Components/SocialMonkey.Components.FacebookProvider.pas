@@ -3,7 +3,12 @@ unit SocialMonkey.Components.FacebookProvider;
 interface
 
 uses
-  SocialMonkey.Two.AbstractProvider, SocialMonkey.Contracts.Provider, SocialMonkey.Providers.FacebookProvider, System.Classes, System.SysUtils,
+  System.Classes,
+  System.SysUtils,
+
+  SocialMonkey.Two.AbstractProvider,
+  SocialMonkey.Contracts.Provider,
+  SocialMonkey.Providers.FacebookProvider,
   SocialMonkey.Providers.Contracts.FacebookProvider,
   SocialMonkey.Components.BaseProvider;
 

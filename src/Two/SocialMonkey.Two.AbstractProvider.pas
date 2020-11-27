@@ -3,13 +3,25 @@ unit SocialMonkey.Two.AbstractProvider;
 interface
 
 uses
-  SocialMonkey.Contracts.Provider, System.Net.URLClient, System.Net.HttpClient,
-  System.Net.HttpClientComponent, System.Generics.Collections,
-  SocialMonkey.Contracts.SocialUser, SocialMonkey.Types, System.SysUtils,
-  FMX.Dialogs, SocialMonkey.Contracts.SocialWebBrowser,
-  SocialMonkey.SocialWebBrowser, SocialMonkey.Two.SocialUser, System.JSON;
+  System.Classes,
+  System.SysUtils,
+  System.JSON,
+  System.Net.URLClient,
+  System.Net.HttpClient,
+  System.Net.HttpClientComponent,
+  System.Generics.Collections,
+
+  FMX.Dialogs,
+
+  SocialMonkey.Contracts.Provider,
+  SocialMonkey.Contracts.SocialUser,
+  SocialMonkey.Contracts.SocialWebBrowser,
+  SocialMonkey.Types,
+  SocialMonkey.SocialWebBrowser,
+  SocialMonkey.Two.SocialUser;
 
 type
+  TAbstractProviderType = (aptNone, aptFacebook, aptInstagram);
 
   TAbstractProvider = class abstract(TInterfacedObject, IProvider)
   private
@@ -22,9 +34,12 @@ type
     FClientSecret: string;
     FRedirectUrl: string;
     FParameters: TArray<string>;
+    FTokenFields: TDictionary<string, string>;
     FScopes: TArray<string>;
     FScopeSeparator: string;
     FStateless: Boolean;
+    FAbstractProviderType: TAbstractProviderType;
+
     procedure SetClientId(const Value: string);
     procedure SetClientSecret(const Value: string);
     procedure SetParameters(const Value: TArray<string>);
@@ -43,6 +58,8 @@ type
     function GetScopes: TArray<string>;
     function GetScopeSeparator: string;
     function GetStateless: Boolean;
+    function GetTokenFields: TDictionary<string, string>; overload;
+    procedure SetTokenFields(const Value: TDictionary<string, string>);
   protected
     { protected declarations }
     procedure SetRedirectUrl(const Value: string); virtual;
@@ -53,14 +70,15 @@ type
     function GetUserByToken(AToken: string): string; virtual; abstract;
     function MapUserToObject(AUser: string): ISocialUser; virtual; abstract;
 
-    function GetTokenFields(ACode: string): TNameValueArray;
+    // function GetTokenFields(ACode: string): TNameValueArray; virtual;
+    function GetTokenFieldsArray: TNameValueArray;
+    function GetTokenFieldsStrLst: TStringList;
     function BuildAuthUrlFromBase(AUrl, AState: string): string;
     function UsesState: Boolean;
     function IsStateless: Boolean;
     function GetState: string;
     function GetCodeFields(AState: string): TQueryFieldArray;
-    function FormatScopes(AScopes: TArray<string>;
-      AScopeSeparator: string): string;
+    function FormatScopes(AScopes: TArray<string>; AScopeSeparator: string): string;
     procedure DoSocialUserCallback(const ASocialUser: ISocialUser = nil);
     procedure GetCode(AOnCode: TOnCode);
     function GetUserJsonValue<T>(AUserJsonResponse, AKey: string): T;
@@ -72,21 +90,19 @@ type
     property ClientSecret: string read GetClientSecret write SetClientSecret;
     property RedirectUrl: string read GetRedirectUrl write SetRedirectUrl;
     property Parameters: TArray<string> read GetParameters write SetParameters;
+    property TokenFields: TDictionary<string, string> read GetTokenFields {write SetTokenFields};
     property Scopes: TArray<string> read GetScopes write SetScopes;
-    property ScopeSeparator: string read GetScopeSeparator
-      write SetScopeSeparator;
+    property ScopeSeparator: string read GetScopeSeparator write SetScopeSeparator;
     property HttpClient: TNetHTTPClient read GetHttpClient write SetHttpClient;
-    property HttpRequest: TNetHTTPRequest read GetHttpRequest
-      write SetHttpRequest;
-
+    property HttpRequest: TNetHTTPRequest read GetHttpRequest write SetHttpRequest;
+    property AbstractProviderType: TAbstractProviderType read FAbstractProviderType write FAbstractProviderType;
   public
     { public declarations }
     constructor Create(AClientID, AClientSecret, ARedirectUrl: string); virtual;
     destructor Destroy; override;
     function GetAccessTokenResponse(ACode: string): string;
     function UserFromToken(AToken: string): ISocialUser;
-    function SocialUser(ASocialUserCallback: TSocialUserCallback<ISocialUser>)
-      : IProvider;
+    function SocialUser(ASocialUserCallback: TSocialUserCallback<ISocialUser>): IProvider;
     property Stateless: Boolean read GetStateless write SetStateless;
   published
     { published declarations }
@@ -116,6 +132,8 @@ begin
   FHttpClient.Asynchronous := True;
   FHttpRequest := TNetHTTPRequest.Create(nil);
   FHttpRequest.Client := FHttpClient;
+  FAbstractProviderType := aptNone;
+  FTokenFields := TDictionary<string,string>.Create;
 
   ClientId := AClientID;
   ClientSecret := AClientSecret;
@@ -131,6 +149,7 @@ destructor TAbstractProvider.Destroy;
 begin
   FreeAndNil(FHttpRequest);
   FreeAndNil(FHttpClient);
+  FreeAndNil(FTokenFields);
   inherited;
 end;
 
@@ -150,12 +169,37 @@ function TAbstractProvider.GetAccessTokenResponse(ACode: string): string;
 var
   LURI: TURI;
   LHeader: TNetHeaders;
+  LResponse: IHTTPResponse;
+  LStrLst: TStringList;
+  LNva: TNameValueArray;
 begin
   LURI := TURI.Create(GetTokenUrl);
-  LURI.Params := GetTokenFields(ACode);
+
   LHeader := [TNameValuePair.Create('Accept', 'application/json')];
-  Result := HttpRequest.Get(LURI.ToString, nil, LHeader)
-    .ContentAsString(TEncoding.UTF8);
+
+  if FTokenFields.ContainsKey('code') then
+    FTokenFields.AddOrSetValue('code', ACode);
+
+  case FAbstractProviderType of
+    aptNone:
+      raise Exception.Create('AbstractProviderType unknown');
+    aptFacebook:
+      begin
+        LURI.Params := GetTokenFieldsArray;
+        Result := HttpRequest.Get(LURI.ToString, nil, LHeader).ContentAsString(TEncoding.UTF8);
+      end;
+    aptInstagram:
+      begin
+        LStrLst := nil;
+        try
+          LStrLst := GetTokenFieldsStrLst;
+          Result := HttpRequest.Post(LURI.ToString, LStrLst, nil, nil, LHeader).ContentAsString(TEncoding.UTF8);
+        finally
+          FreeAndNil(LStrLst);
+        end;
+        //
+      end;
+  end;
 end;
 
 function TAbstractProvider.GetClientId: string;
@@ -192,13 +236,12 @@ function TAbstractProvider.GetCodeFields(AState: string): TQueryFieldArray;
 var
   LCodeFieldsArray: TQueryFieldArray;
 begin
-
   LCodeFieldsArray := [
     TQueryField.Create('client_id', ClientId),
     TQueryField.Create('redirect_uri', RedirectUrl),
     TQueryField.Create('scope', FormatScopes(Scopes, ScopeSeparator)),
-    TQueryField.Create('response_type', 'code'){,
-    TQueryField.Create('auth_type', 'rerequest')}
+    TQueryField.Create('response_type', 'code') { ,
+    TQueryField.Create('auth_type', 'rerequest') }
     ];
 
   if (UsesState) then
@@ -263,12 +306,42 @@ begin
   Result := FStateless;
 end;
 
-function TAbstractProvider.GetTokenFields(ACode: string): TNameValueArray;
+{function TAbstractProvider.GetTokenFields(ACode: string): TNameValueArray;
 begin
-  Result := [TNameValuePair.Create('client_id', ClientId),
+  Result := [
+    TNameValuePair.Create('client_id', ClientId),
     TNameValuePair.Create('client_secret', ClientSecret),
-    TNameValuePair.Create('code', ACode), TNameValuePair.Create('redirect_uri',
-    RedirectUrl)]
+    TNameValuePair.Create('code', ACode),
+    TNameValuePair.Create('redirect_uri', RedirectUrl),
+    TNameValuePair.Create('grant_type', 'authorization_code')
+    ]
+end;}
+
+function TAbstractProvider.GetTokenFields: TDictionary<string, string>;
+begin
+  Result := FTokenFields;
+end;
+
+function TAbstractProvider.GetTokenFieldsArray: TNameValueArray;
+var
+  LKey: string;
+begin
+  Result := [];
+  for LKey in FTokenFields.Keys do
+  begin
+    Result := Result + [TNameValuePair.Create(LKey, FTokenFields.Items[LKey])];
+  end;
+end;
+
+function TAbstractProvider.GetTokenFieldsStrLst: TStringList;
+var
+  LKey: string;
+begin
+  Result := TStringList.Create;
+  for LKey in FTokenFields.Keys do
+  begin
+    Result.Add(LKey + '=' + FTokenFields.Items[LKey]);
+  end;
 end;
 
 function TAbstractProvider.GetTokenValue(AUserJsonResponse: string): string;
@@ -311,11 +384,15 @@ end;
 procedure TAbstractProvider.SetClientId(const Value: string);
 begin
   FClientId := Value;
+  if FTokenFields.ContainsKey('client_id') then
+    FTokenFields.AddOrSetValue('client_id', Value);
 end;
 
 procedure TAbstractProvider.SetClientSecret(const Value: string);
 begin
   FClientSecret := Value;
+  if FTokenFields.ContainsKey('client_secret') then
+    FTokenFields.AddOrSetValue('client_secret', Value);
 end;
 
 procedure TAbstractProvider.SetHttpClient(const Value: TNetHTTPClient);
@@ -336,6 +413,8 @@ end;
 procedure TAbstractProvider.SetRedirectUrl(const Value: string);
 begin
   FRedirectUrl := Value;
+  if FTokenFields.ContainsKey('redirect_uri') then
+    FTokenFields.AddOrSetValue('redirect_uri', Value);
 end;
 
 procedure TAbstractProvider.SetScopes(const Value: TArray<string>);
@@ -351,6 +430,11 @@ end;
 procedure TAbstractProvider.SetStateless(const Value: Boolean);
 begin
   FStateless := Value;
+end;
+
+procedure TAbstractProvider.SetTokenFields(const Value: TDictionary<string, string>);
+begin
+  FTokenFields := Value;
 end;
 
 function TAbstractProvider.SocialUser(ASocialUserCallback
@@ -369,8 +453,7 @@ begin
         TActionSocial.Allowed:
           begin
             LResponse := GetAccessTokenResponse(ACode);
-            LSocialUser := MapUserToObject
-              (GetUserByToken(GetTokenValue(LResponse)));
+            LSocialUser := MapUserToObject(GetUserByToken(GetTokenValue(LResponse)));
             TSocialUser(LSocialUser).SetToken(GetTokenValue(LResponse));
             TSocialUser(LSocialUser).SetRefreshToken
               (GetRefreshTokenValue(LResponse));

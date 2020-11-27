@@ -1,0 +1,11 @@
+{
+	"name": "Instagram",
+	"description": "",
+	"version": "1.0.0",
+	"homepage": "",
+	"mainsrc": "./",
+	"projects": [],
+	"dependencies": {
+		"https://github.com/carloshe/socialmonkey": "^0.0.4"
+	}
+}

@@ -95,7 +95,7 @@ begin
 {$IF Defined(MSWINDOWS) or Defined(MACOS)}
   WindowState:= TWindowState.wsMaximized;
 {$ENDIF}
-  WebBrowse.EnableCaching := False;
+  //WebBrowse.EnableCaching := False;
 end;
 
 procedure TSocialMonkeyWebBrowserView.PathWebBrowserCloseClick(Sender: TObject);

@@ -70,7 +70,6 @@ object SocialMonkeyWebBrowserView: TSocialMonkeyWebBrowserView
         OnClick = PathWebBrowserCloseClick
       end
       object WebBrowse: TWebBrowser
-        EnableCaching = False
         Align = Client
         Size.Width = 560.000000000000000000
         Size.Height = 610.000000000000000000

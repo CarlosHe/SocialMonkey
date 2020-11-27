@@ -4,15 +4,19 @@ interface
 
 uses
 
-  System.SysUtils, System.Json, System.Hash, System.Net.UrlClient,
+  System.SysUtils,
+  System.Json,
+  System.Hash,
+  System.Net.UrlClient,
+
   SocialMonkey.Two.AbstractProvider,
-  SocialMonkey.Contracts.SocialUser, SocialMonkey.Two.SocialUser,
+  SocialMonkey.Contracts.SocialUser,
+  SocialMonkey.Two.SocialUser,
   SocialMonkey.Providers.Contracts.FacebookProvider;
 
 type
 
-  TSocialMonkeyFacebookProvider = class(TAbstractProvider,
-    IFacebookProviderInterface)
+  TSocialMonkeyFacebookProvider = class(TAbstractProvider, IFacebookProviderInterface)
   private
     { private declarations }
     FGraphUrl: string;
@@ -57,6 +61,12 @@ constructor TSocialMonkeyFacebookProvider.Create(AClientID, AClientSecret,
   ARedirectUrl: string);
 begin
   inherited;
+  TokenFields.AddOrSetValue('client_id', EmptyStr);
+  TokenFields.AddOrSetValue('client_secret', EmptyStr);
+  TokenFields.AddOrSetValue('code', EmptyStr);
+  TokenFields.AddOrSetValue('redirect_uri', EmptyStr);
+
+  AbstractProviderType := aptFacebook;
   Scopes := ['email'];
   Fields := ['name', 'email', 'gender', 'verified', 'link'];
   GraphUrl := 'https://graph.facebook.com';
@@ -108,9 +118,7 @@ begin
   end;
 
   LHeader := [TNameValuePair.Create('Accept', 'application/json')];
-  Result := HttpRequest.Get(LURI.ToString, nil, LHeader)
-    .ContentAsString(TEncoding.UTF8);
-
+  Result := HttpRequest.Get(LURI.ToString, nil, LHeader).ContentAsString(TEncoding.UTF8);
 end;
 
 function TSocialMonkeyFacebookProvider.GetVersion: string;
@@ -118,8 +126,7 @@ begin
   Result := FVersion;
 end;
 
-function TSocialMonkeyFacebookProvider.MapUserToObject(AUser: string)
-  : ISocialUser;
+function TSocialMonkeyFacebookProvider.MapUserToObject(AUser: string): ISocialUser;
 var
   LJsonObject: TJsonObject;
   LSocialUser: TSocialUser;
@@ -167,7 +174,7 @@ end;
 
 procedure TSocialMonkeyFacebookProvider.SetRedirectUrl(const Value: string);
 var
-LRedirectUrl: string;
+  LRedirectUrl: string;
 begin
   LRedirectUrl := Value.Trim;
    if not (LRedirectUrl.EndsWith('/')) then
