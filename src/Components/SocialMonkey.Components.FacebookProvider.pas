@@ -20,14 +20,12 @@ type
     procedure SetClientSecret(const Value: string);
     procedure SetFields(const Value: string);
     procedure SetRedirectUrl(const Value: string);
-    procedure SetScopes(const Value: string);
     procedure SetStateless(const Value: Boolean);
     procedure SetVersion(const Value: string);
     function GetClientId: string;
     function GetClientSecret: string;
     function GetFields: string;
     function GetRedirectUrl: string;
-    function GetScopes: string;
     function GetStateless: Boolean;
     function GetVersion: string;
     function GetPictureSize: Integer;
@@ -46,7 +44,6 @@ type
     property RedirectUrl: string read GetRedirectUrl write SetRedirectUrl;
     property Stateless: Boolean read GetStateless write SetStateless;
     property Version: string read GetVersion write SetVersion;
-    property Scopes: string read GetScopes write SetScopes;
     property Fields: string read GetFields write SetFields;
     property PictureSize: Integer read GetPictureSize write SetPictureSize;
   end;
@@ -97,11 +94,6 @@ begin
   Result := GetInstanceAsIFacebookProviderInterface.GetRedirectUrl;
 end;
 
-function TSocialMonkeyFacebookProvider.GetScopes: string;
-begin
-  Result := String.Join(',', GetInstanceAsIFacebookProviderInterface.GetScopes);
-end;
-
 function TSocialMonkeyFacebookProvider.GetStateless: Boolean;
 begin
   Result := GetInstanceAsIFacebookProviderInterface.GetStateless;
@@ -135,11 +127,6 @@ end;
 procedure TSocialMonkeyFacebookProvider.SetRedirectUrl(const Value: string);
 begin
   GetInstanceAsIFacebookProviderInterface.SetRedirectUrl(Value);
-end;
-
-procedure TSocialMonkeyFacebookProvider.SetScopes(const Value: string);
-begin
-  GetInstanceAsIFacebookProviderInterface.SetScopes(Value.Split([',']));
 end;
 
 procedure TSocialMonkeyFacebookProvider.SetStateless(const Value: Boolean);

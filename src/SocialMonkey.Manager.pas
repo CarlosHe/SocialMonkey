@@ -35,12 +35,12 @@ implementation
 
 procedure TSocialMonkeyManager.AddDriver(ADriver: string; AProvider: IProvider);
 var
-  FDriver: string;
+  LDriver: string;
 begin
-  FDriver := ADriver.Trim.ToLower;
-  if FDrivers.ContainsKey(FDriver) then
+  LDriver := ADriver.Trim.ToLower;
+  if FDrivers.ContainsKey(LDriver) then
     raise Exception.Create('Driver already exists.');
-  FDrivers.Add(FDriver, AProvider);
+  FDrivers.Add(LDriver, AProvider);
 end;
 
 constructor TSocialMonkeyManager.Create;
@@ -56,12 +56,12 @@ end;
 
 function TSocialMonkeyManager.Driver(ADriver: string): IProvider;
 var
-  FDriver: string;
+  LDriver: string;
 begin
-  FDriver := ADriver.Trim.ToLower;
-  if not FDrivers.ContainsKey(FDriver) then
+  LDriver := ADriver.Trim.ToLower;
+  if not FDrivers.ContainsKey(LDriver) then
     raise Exception.Create('Social driver not found.');
-  Result := FDrivers.Items[FDriver]
+  Result := FDrivers.Items[LDriver]
 end;
 
 function TSocialMonkeyManager.GetDrivers: TDictionary<string, IProvider>;
@@ -71,12 +71,12 @@ end;
 
 procedure TSocialMonkeyManager.RemoveDriver(ADriver: string);
 var
-  FDriver: string;
+  LDriver: string;
 begin
-  FDriver := ADriver.Trim.ToLower;
-  if not FDrivers.ContainsKey(FDriver) then
+  LDriver := ADriver.Trim.ToLower;
+  if not FDrivers.ContainsKey(LDriver) then
     raise Exception.Create('Social driver not found.');
-  FDrivers.Remove(FDriver);
+  FDrivers.Remove(LDriver);
 end;
 
 procedure TSocialMonkeyManager.SetDrivers(Value: TDictionary<string, IProvider>);

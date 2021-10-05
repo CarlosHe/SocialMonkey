@@ -23,6 +23,7 @@ type
     FOnFinish: TOnFinishAction;
     FOnAccessCanceled: TOnAccessCanceled;
     FOnAccessAllowed: TOnAccessAllowed;
+    FOnAccessError: TOnAccessError;
     FOnAccessDenied: TOnAccessDenied;
   protected
     { protected declarations }
@@ -31,6 +32,7 @@ type
     procedure DoAccessCanceled;
     procedure DoAccessAllowed(ACode: string);
     procedure DoAccessDenied;
+    procedure DoAccessError(ACode: string);
 
     procedure OpenWebView;
     procedure WebViewClose(AAction: TActionSocial; ACode: string);
@@ -38,10 +40,12 @@ type
     { public declarations }
     constructor Create; virtual;
     destructor Destroy; override;
+
     function OnBegin(AOnBegin: TOnBeginAction): ISocialWebBrowser;
     function OnFinish(AOnFinish: TOnFinishAction): ISocialWebBrowser;
     function OnAccessCanceled(AAccessCanceled: TOnAccessCanceled): ISocialWebBrowser;
     function OnAccessAllowed(AOnAccessAllowed: TOnAccessAllowed): ISocialWebBrowser;
+    function OnAccessError(AOnAccessError: TOnAccessError): ISocialWebBrowser;
     function OnAccessDenied(AOnAccessDenied: TOnAccessDenied): ISocialWebBrowser;
     function Execute(AAuthUrl: string): ISocialWebBrowser;
   published
@@ -54,7 +58,12 @@ implementation
 
 constructor TSocialWebBrowser.Create;
 begin
-
+  FOnBegin := nil;
+  FOnFinish := nil;
+  FOnAccessCanceled := nil;
+  FOnAccessAllowed := nil;
+  FOnAccessError := nil;
+  FOnAccessDenied := nil;
 end;
 
 destructor TSocialWebBrowser.Destroy;
@@ -79,6 +88,12 @@ procedure TSocialWebBrowser.DoAccessDenied;
 begin
   if Assigned(FOnAccessDenied) then
     FOnAccessDenied;
+end;
+
+procedure TSocialWebBrowser.DoAccessError(ACode: string);
+begin
+  if Assigned(FOnAccessError) then
+    FOnAccessError(ACode);
 end;
 
 procedure TSocialWebBrowser.DoBegin;
@@ -110,6 +125,13 @@ function TSocialWebBrowser.OnAccessDenied(AOnAccessDenied: TOnAccessDenied): ISo
 begin
   Result := Self;
   FOnAccessDenied := AOnAccessDenied;
+end;
+
+function TSocialWebBrowser.OnAccessError(
+  AOnAccessError: TOnAccessError): ISocialWebBrowser;
+begin
+  Result := Self;
+  FOnAccessError := AOnAccessError;
 end;
 
 function TSocialWebBrowser.OnBegin(AOnBegin: TOnBeginAction): ISocialWebBrowser;
@@ -153,6 +175,8 @@ begin
       DoAccessAllowed(ACode);
     TActionSocial.Denied:
       DoAccessDenied;
+    TActionSocial.Error:
+      DoAccessError(ACode);
   end;
   DoFinish;
 end;

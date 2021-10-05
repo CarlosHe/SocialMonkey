@@ -3,7 +3,7 @@
 {
   For this example is important you to read all APIs documentations:
 
-  https://developers.facebook.com/docs/graph-api/overview
+ https://developers.facebook.com/docs/instagram-basic-display-api/reference/refresh_access_token
 
   Make sure you are able to use the services:
 
@@ -152,12 +152,12 @@ begin
 
   {
     To see/change the default values, take a look on:
-    SocialMonkey.Providers.FacebookProvider.TSocialMonkeyFacebookProvider.Create
+    SocialMonkey.Providers.InstagramProvider.TSocialMonkeyFacebookProvider.Create
 
   }
 
-  FSocialMonkeyProvider.ClientId := '1695816717245429';
-  FSocialMonkeyProvider.ClientSecret := '16bc6d53b465613775e8a483b1e8f1b1';
+  FSocialMonkeyProvider.ClientId := '683549649083523';  // 'ClientId'; // Your Client ID
+  FSocialMonkeyProvider.ClientSecret := '789d9bc76b26b7321cba4f3ddee7aba1' ; // 'ClientSecret'; // Your Client Secret
   FSocialMonkeyManager.AddDriver('instagram', FSocialMonkeyProvider.Provider);
 end;
 

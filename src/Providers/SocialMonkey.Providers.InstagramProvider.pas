@@ -56,6 +56,14 @@ implementation
 constructor TSocialMonkeyInstagramProvider.Create(AClientID, AClientSecret, ARedirectUrl: string);
 begin
   inherited;
+  AuthFields.Clear;
+  AuthFields.AddOrSetValue('client_id', EmptyStr);
+  AuthFields.AddOrSetValue('redirect_uri', EmptyStr);
+  AuthFields.AddOrSetValue('response_type', 'code');
+  AuthFields.AddOrSetValue('scope', 'user_profile,user_media');
+
+
+  TokenFields.Clear;
   TokenFields.AddOrSetValue('client_id', EmptyStr);
   TokenFields.AddOrSetValue('client_secret', EmptyStr);
   TokenFields.AddOrSetValue('code', EmptyStr);
@@ -63,10 +71,9 @@ begin
   TokenFields.AddOrSetValue('grant_type', 'authorization_code');
 
   AbstractProviderType := aptInstagram;
-  Scopes := ['user_profile', 'user_media'];
   Fields := ['id', 'username', 'media'];
   GraphUrl := 'https://graph.instagram.com/';
-  Version := 'v9.0';
+  Version := 'v12.0';
   RedirectUrl := 'https://google.com/';
   PictureSize := 100;
   Stateless := True;
@@ -74,7 +81,7 @@ end;
 
 function TSocialMonkeyInstagramProvider.GetAuthUrl(AState: string): string;
 begin
-  Result := BuildAuthUrlFromBase('https://api.instagram.com/oauth/authorize', AState);
+  Result := BuildAuthUrl('https://api.instagram.com/oauth/authorize', AState);
 end;
 
 function TSocialMonkeyInstagramProvider.GetFields: TArray<string>;

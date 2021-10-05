@@ -1,11 +1,11 @@
 {
 	"hash": "d41d8cd98f00b204e9800998ecf8427e",
-	"updated": "2020-11-23T07:42:51.3057508-03:00",
+	"updated": "2020-11-30T07:07:12.4135539-03:00",
 	"installedModules": {
 		"https://github.com/carloshe/socialmonkey": {
 			"name": "socialmonkey",
-			"version": "0.0.2",
-			"hash": "22b6f56dcec3bbb08c9935f4ff03b7ab",
+			"version": "0.0.5",
+			"hash": "3207040192f27832e3ba689cd67d239d",
 			"artifacts": {
 				"dcp": [
 					"SocialMonkeyPackage.dcp"

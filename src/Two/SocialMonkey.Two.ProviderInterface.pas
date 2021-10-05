@@ -3,7 +3,8 @@ unit SocialMonkey.Two.ProviderInterface;
 interface
 
 uses
-  SocialMonkey.Contracts.SocialUser, SocialMonkey.Contracts.Provider,
+  SocialMonkey.Contracts.SocialUser,
+  SocialMonkey.Contracts.Provider,
   SocialMonkey.Types;
 
 type
@@ -13,15 +14,11 @@ type
     procedure SetClientSecret(const Value: string);
     procedure SetParameters(const Value: TArray<string>);
     procedure SetRedirectUrl(const Value: string);
-    procedure SetScopes(const Value: TArray<string>);
-    procedure SetScopeSeparator(const Value: string);
     procedure SetStateless(const Value: Boolean);
     function GetClientId: string;
     function GetClientSecret: string;
     function GetParameters: TArray<string>;
     function GetRedirectUrl: string;
-    function GetScopes: TArray<string>;
-    function GetScopeSeparator: string;
     function GetStateless: Boolean;
     function SocialUser(ASocialUserCallback: TSocialUserCallback<ISocialUser>): IProvider;
   end;

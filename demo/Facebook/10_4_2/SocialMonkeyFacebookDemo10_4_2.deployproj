@@ -12,9 +12,9 @@
     <ItemGroup Condition="'$(Platform)'=='iOSDevice64'"/>
     <ItemGroup Condition="'$(Platform)'=='Win64'"/>
     <ItemGroup Condition="'$(Platform)'=='Win32'">
-        <DeployFile Include="Win32\Debug\SocialMonkeyFacebookDemo.exe" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\</RemoteDir>
-            <RemoteName>SocialMonkeyFacebookDemo.exe</RemoteName>
+        <DeployFile Include="Win32\Debug\SocialMonkeyFacebookDemo10_4_2.exe" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\</RemoteDir>
+            <RemoteName>SocialMonkeyFacebookDemo10_4_2.exe</RemoteName>
             <DeployClass>ProjectOutput</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -23,29 +23,19 @@
             <Required>True</Required>
         </DeployFile>
     </ItemGroup>
-    <ItemGroup Condition="'$(Platform)'=='Linux64'"/>
-    <ItemGroup Condition="'$(Platform)'=='OSX64'"/>
     <ItemGroup Condition="'$(Platform)'=='Android'">
-        <DeployFile Include="..\Lib\Image\LogoFacebook24.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-mdpi\</RemoteDir>
-            <RemoteName>ic_notification.png</RemoteName>
-            <DeployClass>Android_NotificationIcon24</DeployClass>
+        <DeployFile Include="Android\Debug\libSocialMonkeyFacebookDemo10_4_2.so" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\library\lib\armeabi-v7a\</RemoteDir>
+            <RemoteName>libSocialMonkeyFacebookDemo10_4_2.so</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="..\Lib\Image\LogoFacebook72.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-xxhdpi\</RemoteDir>
-            <RemoteName>ic_notification.png</RemoteName>
-            <DeployClass>Android_NotificationIcon72</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
+            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="Android\Debug\AndroidManifest.xml" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\</RemoteDir>
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\</RemoteDir>
             <RemoteName>AndroidManifest.xml</RemoteName>
             <DeployClass>ProjectAndroidManifest</DeployClass>
             <Operation>1</Operation>
@@ -54,16 +44,16 @@
             <Overwrite>True</Overwrite>
         </DeployFile>
         <DeployFile Include="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\library\lib\armeabi\</RemoteDir>
-            <RemoteName>libSocialMonkeyFacebookDemo.so</RemoteName>
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\library\lib\armeabi\</RemoteDir>
+            <RemoteName>libSocialMonkeyFacebookDemo10_4_2.so</RemoteName>
             <DeployClass>AndroidLibnativeArmeabiFile</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="..\Lib\Image\LogoFacebook96.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-xxxhdpi\</RemoteDir>
+        <DeployFile Include="..\..\Lib\Image\LogoFacebook96.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-xxxhdpi\</RemoteDir>
             <RemoteName>ic_notification.png</RemoteName>
             <DeployClass>Android_NotificationIcon96</DeployClass>
             <Operation>1</Operation>
@@ -71,35 +61,17 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-normal\</RemoteDir>
-            <RemoteName>splash_image.png</RemoteName>
-            <DeployClass>Android_SplashImage470</DeployClass>
+        <DeployFile Include="..\..\Lib\Image\LogoFacebook48.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-xhdpi\</RemoteDir>
+            <RemoteName>ic_notification.png</RemoteName>
+            <DeployClass>Android_NotificationIcon48</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-small\</RemoteDir>
-            <RemoteName>splash_image.png</RemoteName>
-            <DeployClass>Android_SplashImage426</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-large\</RemoteDir>
-            <RemoteName>splash_image.png</RemoteName>
-            <DeployClass>Android_SplashImage640</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="..\Lib\Image\LogoFacebook144.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-xxhdpi\</RemoteDir>
+        <DeployFile Include="..\..\Lib\Image\LogoFacebook144.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-xxhdpi\</RemoteDir>
             <RemoteName>ic_launcher.png</RemoteName>
             <DeployClass>Android_LauncherIcon144</DeployClass>
             <Operation>1</Operation>
@@ -107,17 +79,17 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Android\Debug\colors.xml" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\values\</RemoteDir>
-            <RemoteName>colors.xml</RemoteName>
-            <DeployClass>Android_Colors</DeployClass>
+        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-small\</RemoteDir>
+            <RemoteName>splash_image.png</RemoteName>
+            <DeployClass>Android_SplashImage426</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="..\Lib\Image\LogoFacebook36.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-hdpi\</RemoteDir>
+        <DeployFile Include="..\..\Lib\Image\LogoFacebook36.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-hdpi\</RemoteDir>
             <RemoteName>ic_notification.png</RemoteName>
             <DeployClass>Android_NotificationIcon36</DeployClass>
             <Operation>1</Operation>
@@ -125,8 +97,53 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Android\Debug\colors.xml" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\values\</RemoteDir>
+            <RemoteName>colors.xml</RemoteName>
+            <DeployClass>Android_Colors</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\Lib\Image\LogoFacebook192.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-xxxhdpi\</RemoteDir>
+            <RemoteName>ic_launcher.png</RemoteName>
+            <DeployClass>Android_LauncherIcon192</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_470x320.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-normal\</RemoteDir>
+            <RemoteName>splash_image.png</RemoteName>
+            <DeployClass>Android_SplashImage470</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_640x480.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-large\</RemoteDir>
+            <RemoteName>splash_image.png</RemoteName>
+            <DeployClass>Android_SplashImage640</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="..\..\Lib\Image\LogoFacebook72.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-xxhdpi\</RemoteDir>
+            <RemoteName>ic_notification.png</RemoteName>
+            <DeployClass>Android_NotificationIcon72</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\Android\FM_SplashImage_960x720.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-xlarge\</RemoteDir>
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-xlarge\</RemoteDir>
             <RemoteName>splash_image.png</RemoteName>
             <DeployClass>Android_SplashImage960</DeployClass>
             <Operation>1</Operation>
@@ -134,9 +151,18 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="..\..\Lib\Image\LogoFacebook24.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\drawable-mdpi\</RemoteDir>
+            <RemoteName>ic_notification.png</RemoteName>
+            <DeployClass>Android_NotificationIcon24</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="$(BDS)\lib\android\debug\mips\libnative-activity.so" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\library\lib\mips\</RemoteDir>
-            <RemoteName>libSocialMonkeyFacebookDemo.so</RemoteName>
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\library\lib\mips\</RemoteDir>
+            <RemoteName>libSocialMonkeyFacebookDemo10_4_2.so</RemoteName>
             <DeployClass>AndroidLibnativeMipsFile</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
@@ -144,7 +170,7 @@
             <Overwrite>True</Overwrite>
         </DeployFile>
         <DeployFile Include="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\library\lib\armeabi-v7a\</RemoteDir>
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\library\lib\armeabi-v7a\</RemoteDir>
             <RemoteName>gdbserver</RemoteName>
             <DeployClass>AndroidGDBServer</DeployClass>
             <Operation>1</Operation>
@@ -153,7 +179,7 @@
             <Overwrite>True</Overwrite>
         </DeployFile>
         <DeployFile Include="Android\Debug\classes.dex" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\classes\</RemoteDir>
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\classes\</RemoteDir>
             <RemoteName>classes.dex</RemoteName>
             <DeployClass>AndroidClassesDexFile</DeployClass>
             <Operation>1</Operation>
@@ -161,29 +187,10 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Android\Debug\libSocialMonkeyFacebookDemo.so" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\library\lib\armeabi-v7a\</RemoteDir>
-            <RemoteName>libSocialMonkeyFacebookDemo.so</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
-        </DeployFile>
         <DeployFile Include="Android\Debug\strings.xml" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\values\</RemoteDir>
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2\res\values\</RemoteDir>
             <RemoteName>strings.xml</RemoteName>
             <DeployClass>Android_Strings</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="..\Lib\Image\LogoFacebook48.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>SocialMonkeyFacebookDemo\res\drawable-xhdpi\</RemoteDir>
-            <RemoteName>ic_notification.png</RemoteName>
-            <DeployClass>Android_NotificationIcon48</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -192,7 +199,7 @@
     </ItemGroup>
     <ItemGroup Condition="'$(Platform)'=='iOSSimulator'">
         <DeployFile Include="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib">
-            <RemoteDir>SocialMonkeyFacebookDemo.app\</RemoteDir>
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2.app\</RemoteDir>
             <RemoteName>libcgunwind.1.0.dylib</RemoteName>
             <DeployClass>DependencyModule</DeployClass>
             <Operation>1</Operation>
@@ -201,7 +208,7 @@
             <Overwrite>True</Overwrite>
         </DeployFile>
         <DeployFile Include="$(BDS)\Redist\iossimulator\libpcre.dylib">
-            <RemoteDir>SocialMonkeyFacebookDemo.app\</RemoteDir>
+            <RemoteDir>SocialMonkeyFacebookDemo10_4_2.app\</RemoteDir>
             <RemoteName>libpcre.dylib</RemoteName>
             <DeployClass>DependencyModule</DeployClass>
             <Operation>1</Operation>

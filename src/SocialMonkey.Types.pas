@@ -5,11 +5,13 @@ interface
 
 type
 
-  TActionSocial = (Canceled, Allowed, Denied);
+  TActionSocial = (Canceled, Allowed, Denied, Error);
+
   TOnBeginAction = reference to procedure;
   TOnFinishAction = reference to procedure;
   TOnAccessCanceled = reference to procedure;
   TOnAccessAllowed = reference to procedure(ACode: string);
+  TOnAccessError = reference to procedure(AError: string);
   TOnAccessDenied = reference to procedure;
   TOnSocialUser<T> = reference to procedure(ASocialUser: T);
   TOnCloseSocialWebBrowser = reference to procedure(Action: TActionSocial; Code: string);

@@ -3,11 +3,12 @@
 {
   For this example is important you to read all APIs documentations:
 
-  https://developers.facebook.com/docs/graph-api/overview
+  https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-protocols
+  https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
 
   Make sure you are able to use the services:
 
-  https://developers.facebook.com
+  https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade
 }
 
 interface
@@ -19,7 +20,7 @@ uses
   System.Classes,
   System.Variants,
 
-  System.Net.HttpClient,
+  System.Net.HttpClient, 
   System.Net.URLClient,
   System.Net.HttpClientComponent,
 
@@ -33,10 +34,10 @@ uses
   FMX.Memo.Types,
   FMX.ScrollBox,
   FMX.Memo,
-  FMX.Objects,
+  FMX.Objects, 
 
   SocialMonkey.Components.BaseProvider,
-  SocialMonkey.Components.FacebookProvider,
+  SocialMonkey.Components.OutlookProvider,
   SocialMonkey.Components.Manager,
   SocialMonkey.Types,
   SocialMonkey.Contracts.SocialUser,
@@ -52,9 +53,10 @@ uses
 {$IFEND};
 
 type
-  TLocalUserR = record
+  TLocalUser = record
   private
     FId: string;
+    FRefreshToken: string;
     FName: string;
     FEmail: string;
     FToken: string;
@@ -63,6 +65,7 @@ type
   public
     property Id: string read FId write FId;
     property Token: string read FToken write FToken;
+    property RefreshToken: string read FRefreshToken write FRefreshToken;
     property Name: string read FName write FName;
     property Email: string read FEmail write FEmail;
     property UrlAvatar: string read FUrlAvatar write FUrlAvatar;
@@ -79,9 +82,9 @@ type
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
-    FLocalUser: TLocalUserR;
+    FLocalUser: TLocalUser;
     SocialMonkeyManager: TSocialMonkeyManager;
-    SocialMonkeyFacebookProvider: TSocialMonkeyFacebookProvider;
+    SocialMonkeyProvider: TSocialMonkeyOutlookProvider;
 
     function GetProfilePicture: TStream;
 
@@ -103,13 +106,14 @@ implementation
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  SocialMonkeyManager.Driver('facebook').SocialUser(SocialMonkeyResult);
+  SocialMonkeyManager.Driver('outlook').SocialUser(SocialMonkeyResult);
 end;
 
 procedure TForm1.DoAfterLogin;
 begin
   SetWebBrowserPermissions;
   Memo1.Lines.Clear;
+  Image1.Bitmap.Clear(0);
   TThread.CreateAnonymousThread(
     procedure
     var
@@ -127,11 +131,11 @@ begin
             begin
               Memo1.Lines.Add('Id: ' + FLocalUser.Id);
               Memo1.Lines.Add('Token: ' + FLocalUser.Token);
+              Memo1.Lines.Add('RefreshToken: ' + FLocalUser.RefreshToken);
               Memo1.Lines.Add('Name: ' + FLocalUser.Name);
               Memo1.Lines.Add('Email: ' + FLocalUser.Email);
               Memo1.Lines.Add('UrlAvatar: ' + FLocalUser.UrlAvatar);
             end);
-
           LMStream := GetProfilePicture;
           try
             TThread.Synchronize(TThread.CurrentThread,
@@ -162,27 +166,28 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   FLocalUser.Clear;
   SocialMonkeyManager := TSocialMonkeyManager.Create(nil);
-  SocialMonkeyFacebookProvider := TSocialMonkeyFacebookProvider.Create(nil);
+  SocialMonkeyProvider := TSocialMonkeyOutlookProvider.Create(nil);
 
   {
     To see/change the default values, take a look on:
-    SocialMonkey.Providers.FacebookProvider.TSocialMonkeyFacebookProvider.Create
+    SocialMonkey.Providers.OutlookProvider.TSocialMonkeyOutlookProvider.Create
   }
 
-  SocialMonkeyFacebookProvider.ClientId := '683549649083523'; // 'ClientId'; // Your Client ID
-  SocialMonkeyFacebookProvider.ClientSecret := '789d9bc76b26b7321cba4f3ddee7aba1'; // 'ClientSecret'; // Your Client Secret
-  SocialMonkeyManager.AddDriver('facebook', SocialMonkeyFacebookProvider.Provider);
+  SocialMonkeyProvider.ClientId := 'd416c0ac-b96d-49c2-a549-0b8cd09f8a2f'; // 'ClientId'; // Your Client ID
+  SocialMonkeyProvider.ClientSecret := 'CKL7Q~PRO-534z8PO4GfJIvMScnHNeYw7AT~y'; // '44b2839c-5ade-4375-8293-968567507537'; // 'ClientSecret'; // Your Client Secret
+  SocialMonkeyManager.AddDriver('outlook', SocialMonkeyProvider.Provider);
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(SocialMonkeyManager);
-  FreeAndNil(SocialMonkeyFacebookProvider);
+  FreeAndNil(SocialMonkeyProvider);
 end;
 
 function TForm1.GetProfilePicture: TStream;
 var
   LNetCli: TNetHTTPClient;
+  LHeader: TNetHeaders;
   LResponse: IHTTPResponse;
 begin
   Result := TMemoryStream.Create;
@@ -190,7 +195,11 @@ begin
   try
     LNetCli := TNetHTTPClient.Create(nil);
     try
-      LResponse := LNetCli.Get(FLocalUser.UrlAvatar, Result, nil);
+      LHeader := [
+        TNameValuePair.Create('Authorization', 'Bearer ' + FLocalUser.Token), 
+        TNameValuePair.Create('Content-Type', 'image/jpg')
+        ];
+      LResponse := LNetCli.Get(FLocalUser.UrlAvatar, Result, LHeader);
 
       if LResponse.StatusCode <> 200 then
         raise Exception.Create(LResponse.StatusText);
@@ -267,14 +276,28 @@ begin
             LSocialUser: TSocialUser;
           begin
             LSocialUser := TSocialUser(ASocialUser);
+            FLocalUser.Clear;
             FLocalUser.Id := LSocialUser.Id;
             FLocalUser.Token := LSocialUser.Token;
+            FLocalUser.RefreshToken := LSocialUser.RefreshToken;
             FLocalUser.Name := LSocialUser.Name;
             FLocalUser.Email := LSocialUser.Email;
             FLocalUser.UrlAvatar := LSocialUser.Avatar;
 
             DoAfterLogin;
           end);
+      end;
+    TActionSocial.Error:
+      begin
+        TThread.Queue(nil,
+          procedure
+          var
+            LSocialUser: TSocialUser;
+          begin
+            LSocialUser := TSocialUser(ASocialUser);
+            ShowMessage(LSocialUser.Id);
+          end);
+
       end;
     TActionSocial.Denied:
       begin
@@ -288,12 +311,13 @@ begin
   end;
 end;
 
-{ TLocalUserR }
+{ TLocalUser }
 
-procedure TLocalUserR.Clear;
+procedure TLocalUser.Clear;
 begin
   Id := EmptyStr;
   Token := EmptyStr;
+  RefreshToken := EmptyStr;
   Name := EmptyStr;
   Email := EmptyStr;
   UrlAvatar := EmptyStr;

@@ -3,7 +3,7 @@
 {
   For this example is important you to read all APIs documentations:
 
-  https://developers.facebook.com/docs/graph-api/overview
+ https://developers.facebook.com/docs/Twitter-basic-display-api/
 
   Make sure you are able to use the services:
 
@@ -19,10 +19,6 @@ uses
   System.Classes,
   System.Variants,
 
-  System.Net.HttpClient,
-  System.Net.URLClient,
-  System.Net.HttpClientComponent,
-
   FMX.Types,
   FMX.Controls,
   FMX.Forms,
@@ -33,10 +29,9 @@ uses
   FMX.Memo.Types,
   FMX.ScrollBox,
   FMX.Memo,
-  FMX.Objects,
 
   SocialMonkey.Components.BaseProvider,
-  SocialMonkey.Components.FacebookProvider,
+  SocialMonkey.Components.TwitterProvider,
   SocialMonkey.Components.Manager,
   SocialMonkey.Types,
   SocialMonkey.Contracts.SocialUser,
@@ -52,38 +47,42 @@ uses
 {$IFEND};
 
 type
-  TLocalUserR = record
+  TLocalUser = class
   private
-    FId: string;
     FName: string;
     FEmail: string;
-    FToken: string;
     FUrlAvatar: string;
+    FId: string;
+    FToken: string;
+    procedure SetEmail(const Value: string);
+    procedure SetId(const Value: string);
+    procedure SetName(const Value: string);
+    procedure SetToken(const Value: string);
+    procedure SetUrlAvatar(const Value: string);
     { private declarations }
+  protected
+    { protected declarations }
   public
-    property Id: string read FId write FId;
-    property Token: string read FToken write FToken;
-    property Name: string read FName write FName;
-    property Email: string read FEmail write FEmail;
-    property UrlAvatar: string read FUrlAvatar write FUrlAvatar;
-
-    procedure Clear;
+    property Id: string read FId write SetId;
+    property Token: string read FToken write SetToken;
+    property Name: string read FName write SetName;
+    property Email: string read FEmail write SetEmail;
+    property UrlAvatar: string read FUrlAvatar write SetUrlAvatar;
     { public declarations }
+  published
+    { published declarations }
   end;
 
   TForm1 = class(TForm)
     Button1: TButton;
     Memo1: TMemo;
-    Image1: TImage;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
-    FLocalUser: TLocalUserR;
-    SocialMonkeyManager: TSocialMonkeyManager;
-    SocialMonkeyFacebookProvider: TSocialMonkeyFacebookProvider;
-
-    function GetProfilePicture: TStream;
+    FLocalUser: TLocalUser;
+    FSocialMonkeyManager: TSocialMonkeyManager;
+    FSocialMonkeyProvider: TSocialMonkeyTwitterProvider;
 
     procedure SetWebBrowserPermissions;
     procedure SocialMonkeyResult(AAction: TActionSocial; ASocialUser: ISocialUser);
@@ -103,7 +102,7 @@ implementation
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  SocialMonkeyManager.Driver('facebook').SocialUser(SocialMonkeyResult);
+  FSocialMonkeyManager.Driver('twitter').SocialUser(SocialMonkeyResult);
 end;
 
 procedure TForm1.DoAfterLogin;
@@ -112,12 +111,10 @@ begin
   Memo1.Lines.Clear;
   TThread.CreateAnonymousThread(
     procedure
-    var
-      LMStream: TStream;
     begin
       try
         try
-          if (FLocalUser.Id.Trim.IsEmpty) then
+          if not Assigned(FLocalUser) then
             raise Exception.Create('Not logged');
 
           // Here you can do your own roles to validate the login
@@ -131,17 +128,6 @@ begin
               Memo1.Lines.Add('Email: ' + FLocalUser.Email);
               Memo1.Lines.Add('UrlAvatar: ' + FLocalUser.UrlAvatar);
             end);
-
-          LMStream := GetProfilePicture;
-          try
-            TThread.Synchronize(TThread.CurrentThread,
-              procedure
-              begin
-                Image1.Bitmap.LoadFromStream(LMStream);
-              end);
-          finally
-            FreeAndNil(LMStream);
-          end;
         except
           on E: Exception do
           begin
@@ -153,54 +139,33 @@ begin
           end;
         end;
       finally
-        FLocalUser.Clear;
+        FreeAndNil(FLocalUser);
       end;
     end).Start;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  FLocalUser.Clear;
-  SocialMonkeyManager := TSocialMonkeyManager.Create(nil);
-  SocialMonkeyFacebookProvider := TSocialMonkeyFacebookProvider.Create(nil);
+  FLocalUser := nil;
+  FSocialMonkeyManager := TSocialMonkeyManager.Create(nil);
+  FSocialMonkeyProvider := TSocialMonkeyTwitterProvider.Create(nil);
 
   {
     To see/change the default values, take a look on:
-    SocialMonkey.Providers.FacebookProvider.TSocialMonkeyFacebookProvider.Create
+    SocialMonkey.Providers.TwitterProvider.TSocialMonkeyFacebookProvider.Create
+
   }
 
-  SocialMonkeyFacebookProvider.ClientId := '683549649083523'; // 'ClientId'; // Your Client ID
-  SocialMonkeyFacebookProvider.ClientSecret := '789d9bc76b26b7321cba4f3ddee7aba1'; // 'ClientSecret'; // Your Client Secret
-  SocialMonkeyManager.AddDriver('facebook', SocialMonkeyFacebookProvider.Provider);
+  FSocialMonkeyProvider.ClientId := 'ClientId';
+  FSocialMonkeyProvider.ClientSecret := 'ClientSecret';
+  FSocialMonkeyManager.AddDriver('Twitter', FSocialMonkeyProvider.Provider);
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  FreeAndNil(SocialMonkeyManager);
-  FreeAndNil(SocialMonkeyFacebookProvider);
-end;
-
-function TForm1.GetProfilePicture: TStream;
-var
-  LNetCli: TNetHTTPClient;
-  LResponse: IHTTPResponse;
-begin
-  Result := TMemoryStream.Create;
-  Result.Position := 0;
-  try
-    LNetCli := TNetHTTPClient.Create(nil);
-    try
-      LResponse := LNetCli.Get(FLocalUser.UrlAvatar, Result, nil);
-
-      if LResponse.StatusCode <> 200 then
-        raise Exception.Create(LResponse.StatusText);
-    finally
-      FreeAndNil(LNetCli);
-    end;
-  except
-    FreeAndNil(Result);
-    raise ;
-  end;
+  FreeAndNil(FSocialMonkeyManager);
+  FreeAndNil(FSocialMonkeyProvider);
+  FreeAndNil(FLocalUser);
 end;
 
 procedure TForm1.SetWebBrowserPermissions;
@@ -248,14 +213,14 @@ procedure TForm1.SocialMonkeyResult(AAction: TActionSocial;
 ASocialUser: ISocialUser);
 begin
   SetWebBrowserPermissions;
-  FLocalUser.Clear;
+  FreeAndNil(FLocalUser);
   case AAction of
     TActionSocial.Canceled:
       begin
         TThread.Queue(nil,
           procedure
           begin
-            ShowMessage('The operation was canceled!');
+            ShowMessage('Operação foi cancelada!');
           end);
 
       end;
@@ -267,6 +232,7 @@ begin
             LSocialUser: TSocialUser;
           begin
             LSocialUser := TSocialUser(ASocialUser);
+            FLocalUser := TLocalUser.Create;
             FLocalUser.Id := LSocialUser.Id;
             FLocalUser.Token := LSocialUser.Token;
             FLocalUser.Name := LSocialUser.Name;
@@ -281,22 +247,38 @@ begin
         TThread.Queue(nil,
           procedure
           begin
-            ShowMessage('The operation was rejected!');
+            ShowMessage('Operação foi rejeitada!');
           end);
 
       end;
   end;
 end;
 
-{ TLocalUserR }
+{ TLocalUser }
 
-procedure TLocalUserR.Clear;
+procedure TLocalUser.SetEmail(const Value: string);
 begin
-  Id := EmptyStr;
-  Token := EmptyStr;
-  Name := EmptyStr;
-  Email := EmptyStr;
-  UrlAvatar := EmptyStr;
+  FEmail := Value;
+end;
+
+procedure TLocalUser.SetId(const Value: string);
+begin
+  FId := Value;
+end;
+
+procedure TLocalUser.SetName(const Value: string);
+begin
+  FName := Value;
+end;
+
+procedure TLocalUser.SetToken(const Value: string);
+begin
+  FToken := Value;
+end;
+
+procedure TLocalUser.SetUrlAvatar(const Value: string);
+begin
+  FUrlAvatar := Value;
 end;
 
 end.

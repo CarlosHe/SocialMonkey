@@ -13,6 +13,7 @@ type
     function OnFinish(AOnFinish: TOnFinishAction): ISocialWebBrowser;
     function OnAccessCanceled(AAccessCanceled: TOnAccessCanceled): ISocialWebBrowser;
     function OnAccessAllowed(AOnAccessAllowed: TOnAccessAllowed): ISocialWebBrowser;
+    function OnAccessError(AOnAccessAllowed: TOnAccessError): ISocialWebBrowser;
     function OnAccessDenied(AOnAccessDenied: TOnAccessDenied): ISocialWebBrowser;
     function Execute(AAuthUrl: string): ISocialWebBrowser;
   end;

@@ -1,9 +1,9 @@
-program SocialMonkeyFacebookDemo;
+program SocialMonkeyFacebookDemo10_4_2;
 
 uses
   System.StartUpCopy,
   FMX.Forms,
-  Unit1 in 'Unit1.pas' {Form1};
+  Unit1 in '..\Unit1.pas' {Form1};
 
 {$R *.res}
 

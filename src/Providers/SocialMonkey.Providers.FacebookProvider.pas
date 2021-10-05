@@ -61,16 +61,22 @@ constructor TSocialMonkeyFacebookProvider.Create(AClientID, AClientSecret,
   ARedirectUrl: string);
 begin
   inherited;
+  AuthFields.Clear;
+  AuthFields.AddOrSetValue('client_id', EmptyStr);
+  AuthFields.AddOrSetValue('redirect_uri', EmptyStr);
+  AuthFields.AddOrSetValue('response_type', 'code');
+
+  TokenFields.Clear;
   TokenFields.AddOrSetValue('client_id', EmptyStr);
   TokenFields.AddOrSetValue('client_secret', EmptyStr);
   TokenFields.AddOrSetValue('code', EmptyStr);
   TokenFields.AddOrSetValue('redirect_uri', EmptyStr);
 
   AbstractProviderType := aptFacebook;
-  Scopes := ['email'];
+  //Scopes := ['email'];
   Fields := ['name', 'email', 'gender', 'verified', 'link'];
   GraphUrl := 'https://graph.facebook.com';
-  Version := 'v9.0';
+  Version := 'v12.0';
   RedirectUrl := 'https://google.com/';
   PictureSize := 100;
   Stateless := False;
@@ -78,7 +84,8 @@ end;
 
 function TSocialMonkeyFacebookProvider.GetAuthUrl(AState: string): string;
 begin
-  Result := BuildAuthUrlFromBase('https://www.facebook.com/' + Version + '/dialog/oauth', AState);
+  Result := BuildAuthUrl('https://www.facebook.com/' + Version + '/dialog/oauth', AState);
+  // BuildAuthUrlFromBase('https://www.facebook.com/' + Version + '/dialog/oauth', AState);
 end;
 
 function TSocialMonkeyFacebookProvider.GetFields: TArray<string>;
@@ -98,7 +105,6 @@ end;
 
 function TSocialMonkeyFacebookProvider.GetTokenUrl: string;
 begin
-  // Result := GraphUrl + '/' + Version + '/oauth/access_token';
   Result := GraphUrl + '/oauth/access_token';
 end;
 
@@ -130,7 +136,7 @@ function TSocialMonkeyFacebookProvider.MapUserToObject(AUser: string): ISocialUs
 var
   LJsonObject: TJsonObject;
   LSocialUser: TSocialUser;
-  LId: string;
+  LText: string;
   LName: string;
   LEmail: string;
   LAvatarUrl: string;
@@ -140,14 +146,14 @@ begin
   begin
     try
       LSocialUser := TSocialUser.Create;
-      LId := LJsonObject.GetValue<string>('id');
-      LSocialUser.Id := LId;
-      LSocialUser.Nickname := '';
-      if LJsonObject.TryGetValue<string>('name', LName) then
-        LSocialUser.Name := LName;
-      if LJsonObject.TryGetValue<string>('email', LEmail) then
-        LSocialUser.Email := LEmail;
-      LAvatarUrl := GraphUrl + '/' + Version + '/' + LId + '/picture';
+      LJsonObject.TryGetValue<string>('id', LText);
+      LSocialUser.Id := LText;
+      LSocialUser.Nickname := EmptyStr;
+      LJsonObject.TryGetValue<string>('name', LText);
+      LSocialUser.Name := LText;
+      LJsonObject.TryGetValue<string>('email', LText);
+      LSocialUser.Email := LText;
+      LAvatarUrl := GraphUrl + '/' + Version + '/' + LSocialUser.Id + '/picture';
       LSocialUser.Avatar := LAvatarUrl + '?type=normal&height=' +
         FPictureSize.ToString + '&width=' + FPictureSize.ToString;
       Result := LSocialUser;

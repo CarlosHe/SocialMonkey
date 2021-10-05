@@ -136,10 +136,14 @@ begin
     CloseWebView(TActionSocial.Allowed, LURI.ParameterByName['code']);
   end;
 
-  if (ContainsParam(LURI.Params, 'error')) and (LURI.ParameterByName['error'] = 'access_denied') then
+  if (ContainsParam(LURI.Params, 'error')) then
   begin
     WebBrowse.Stop;
-    CloseWebView(TActionSocial.Denied);
+    if (LURI.ParameterByName['error'] = 'access_denied') then
+    begin
+      CloseWebView(TActionSocial.Denied);
+    end else
+      CloseWebView(TActionSocial.Error, LURI.ParameterByName['error']);
   end;
 
 end;
