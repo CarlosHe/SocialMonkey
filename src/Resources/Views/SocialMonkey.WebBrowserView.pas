@@ -145,7 +145,6 @@ begin
     end else
       CloseWebView(TActionSocial.Error, LURI.ParameterByName['error']);
   end;
-
 end;
 
 end.

@@ -78,6 +78,7 @@ object SocialMonkeyWebBrowserView: TSocialMonkeyWebBrowserView
         Margins.Top = 40.000000000000000000
         Margins.Right = 10.000000000000000000
         Margins.Bottom = 10.000000000000000000
+        WindowsEngine = None
         OnDidFinishLoad = WebViewDidFinishLoad
       end
     end

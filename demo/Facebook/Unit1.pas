@@ -169,8 +169,8 @@ begin
     SocialMonkey.Providers.FacebookProvider.TSocialMonkeyFacebookProvider.Create
   }
 
-  SocialMonkeyFacebookProvider.ClientId := '683549649083523'; // 'ClientId'; // Your Client ID
-  SocialMonkeyFacebookProvider.ClientSecret := '789d9bc76b26b7321cba4f3ddee7aba1'; // 'ClientSecret'; // Your Client Secret
+  SocialMonkeyFacebookProvider.ClientId := 'ClientId'; // Your Client ID
+  SocialMonkeyFacebookProvider.ClientSecret := 'ClientSecret'; // Your Client Secret
   SocialMonkeyManager.AddDriver('facebook', SocialMonkeyFacebookProvider.Provider);
 end;
 

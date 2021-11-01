@@ -173,8 +173,8 @@ begin
     SocialMonkey.Providers.OutlookProvider.TSocialMonkeyOutlookProvider.Create
   }
 
-  SocialMonkeyProvider.ClientId := 'd416c0ac-b96d-49c2-a549-0b8cd09f8a2f'; // 'ClientId'; // Your Client ID
-  SocialMonkeyProvider.ClientSecret := 'CKL7Q~PRO-534z8PO4GfJIvMScnHNeYw7AT~y'; // '44b2839c-5ade-4375-8293-968567507537'; // 'ClientSecret'; // Your Client Secret
+  SocialMonkeyProvider.ClientId := 'ClientId'; // Your Client ID
+  SocialMonkeyProvider.ClientSecret := 'ClientSecret'; // Your Client Secret
   SocialMonkeyManager.AddDriver('outlook', SocialMonkeyProvider.Provider);
 end;
 
